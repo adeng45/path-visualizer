@@ -31,6 +31,7 @@ export const isStartOrEnd = (row: number, col: number) => {
   return (row === 0 && col === 0) || (row === MAX_ROWS - 2 && col === MAX_COLS - 2)
 }
 
+
 export const changeTile = (grid: Grid, row: number, col: number) => {
   const newGrid = grid.slice();
   const oldTile = grid[row][col];
@@ -39,4 +40,16 @@ export const changeTile = (grid: Grid, row: number, col: number) => {
     isWall: !oldTile.isWall
   };
   return newGrid;
+}
+
+export const isSameTile = (t1: Tile, t2: Tile) => {
+  return (t1.row === t2.row) && (t1.col === t2.col);
+}
+
+export const sleep = (ns: number) => {
+  return new Promise(resolve => setTimeout(resolve, ns));
+}
+
+export const coinflip = () => {
+  return Math.round(Math.random());
 }

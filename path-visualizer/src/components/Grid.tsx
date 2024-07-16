@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { MAX_COLS, MAX_ROWS } from "../utils/constants";
 import { Tile } from "./Tile";
-import { MutableRefObject, useState } from "react"; 
+import { MutableRefObject, useState, useRef } from "react"; 
 import { isStartOrEnd, changeTile } from "../utils/helpers";
 
 export const Grid = ({
@@ -12,18 +12,18 @@ export const Grid = ({
 }) => {
 
   const { grid, setGrid } = usePathfinding();
-  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+  const isMouseDownRef = useRef<boolean>(false);
 
   const handleMouseDown = (row: number, col: number) => {
     if (isVisualizationRunningRef.current || isStartOrEnd(row, col)) {
       return;
     }
-    setIsMouseDown(true);
+    isMouseDownRef.current = true;
     setGrid(changeTile(grid, row, col));
   }
 
   const handleMouseEnter = (row: number, col: number) => {
-    if (isVisualizationRunningRef.current || isStartOrEnd(row, col) || !isMouseDown) {
+    if (isVisualizationRunningRef.current || isStartOrEnd(row, col) || !isMouseDownRef.current) {
       return;
     }
     setGrid(changeTile(grid, row, col));
@@ -33,14 +33,14 @@ export const Grid = ({
     if (isVisualizationRunningRef.current || isStartOrEnd(row, col)) {
       return;
     }
-    setIsMouseDown(false);
+    isMouseDownRef.current = false;
   }
 
   return (
     <div
       className={twMerge(
         // Base classes
-        "flex items-center flex-col justify-center border-sky-300 mt-10",
+        "flex items-center flex-col justify-center borderborder-sky-300 mt-10 mb-10",
         // Control grid height
         `lg:min-h-[${MAX_ROWS * 17}px]  md:min-h-[${
           MAX_ROWS * 15

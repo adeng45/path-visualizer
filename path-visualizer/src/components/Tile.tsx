@@ -52,13 +52,13 @@ export const Tile = ({
     tileTyleStyle = TILE_STYLE;
   }
 
-  const borderStyle =
-    row === MAX_ROWS - 1 ? "border-b" : col === 0 ? "border-l" : "";
-  const edgeStyle = row === MAX_ROWS - 1 && col === 0 ? "border-l" : "";
+  // const borderStyle =
+  //   row === MAX_ROWS - 1 ? "border-b" : col === 0 ? "border-l" : "";
+  // const edgeStyle = row === MAX_ROWS - 1 && col === 0 ? "border-l" : "";
 
   return (
     <div
-      className={twMerge(tileTyleStyle, borderStyle, edgeStyle)}
+      className={twMerge(tileTyleStyle)}
       id={`${row}-${col}`}
       onMouseDown={() => handleMouseDown()}
       onMouseEnter={() => handleMouseEnter()}
