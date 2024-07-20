@@ -3,7 +3,8 @@ import { usePathfinding } from "../hooks/usePathfinding";
 import { MAX_COLS, MAX_ROWS } from "../utils/constants";
 import { Tile } from "./Tile";
 import { MutableRefObject, useState, useRef } from "react"; 
-import { isStartOrEnd, changeTile } from "../utils/helpers";
+import { isStartOrEndTile } from "../utils/tileFunctions";
+import { setTileInGrid } from "../utils/tileFunctions";
 
 export const Grid = ({
   isVisualizationRunningRef
@@ -15,22 +16,34 @@ export const Grid = ({
   const isMouseDownRef = useRef<boolean>(false);
 
   const handleMouseDown = (row: number, col: number) => {
-    if (isVisualizationRunningRef.current || isStartOrEnd(row, col)) {
+    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col)) {
       return;
     }
     isMouseDownRef.current = true;
-    setGrid(changeTile(grid, row, col));
+    setTileInGrid({
+      grid, 
+      row, 
+      col, 
+      isWall: true
+    })
+    setGrid(grid.slice());
   }
 
   const handleMouseEnter = (row: number, col: number) => {
-    if (isVisualizationRunningRef.current || isStartOrEnd(row, col) || !isMouseDownRef.current) {
+    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col) || !isMouseDownRef.current) {
       return;
     }
-    setGrid(changeTile(grid, row, col));
+    setTileInGrid({
+      grid, 
+      row, 
+      col, 
+      isWall: true
+    })
+    setGrid(grid.slice());
   }
 
   const handleMouseUp = (row: number, col: number) => {
-    if (isVisualizationRunningRef.current || isStartOrEnd(row, col)) {
+    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col)) {
       return;
     }
     isMouseDownRef.current = false;
@@ -58,7 +71,7 @@ export const Grid = ({
               tile;
             return (
               <Tile
-                key={tileIndex}
+                key={row * MAX_COLS + col}
                 row={tile.row}
                 col={tile.col}
                 isEnd={isEnd}

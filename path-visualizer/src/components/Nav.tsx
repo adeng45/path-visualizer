@@ -1,12 +1,13 @@
 import { MutableRefObject, useState } from "react";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { Select } from "./Select";
-import { MAZES } from "../utils/constants";
+import { MAX_COLS, MAX_ROWS, MAZES } from "../utils/constants";
 import { Maze } from "../utils/types";
-import { resetGrid } from "../utils/resetGrid";
 import { useTile } from "../hooks/useTile";
-import { binaryTree } from "../algorithms/maze/binaryTree";
-
+import binaryTree from "../algorithms/maze/binaryTree";
+import recursiveDivision from "../algorithms/maze/recursiveDivision";
+// import recursiveDivision from "../algorithms/maze/recursiveDivision"
+import { resetGrid } from "../utils/gridFunctions";
 
 export const Nav =({
   isVisualizationRunningRef,
@@ -14,19 +15,34 @@ export const Nav =({
   isVisualizationRunningRef: MutableRefObject<boolean>;
 }) => {
 
-  const [isDisabled, setIsDisabled] = useState<boolean>();
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const { grid, setGrid, maze, setMaze } = usePathfinding();
   const { startTile, endTile } = useTile();
 
-  const handleGenerateMaze = (maze: Maze) => {
-    // Use switch block
-    if (maze === "NONE") {
-      setGrid(resetGrid(grid, startTile, endTile));
-    }
+  const handleGenerateMaze = async (maze: Maze) => {
+    setMaze(maze)
+    setIsDisabled(true);
 
-    if (maze === "BINARY_TREE") {
-      binaryTree(grid, startTile, endTile, setIsDisabled, 2);
+    switch (maze) {
+      case "NONE": {
+        resetGrid(grid, startTile, endTile);
+        break;
+      }
+      case "BINARY_TREE": {
+        await binaryTree(grid, startTile, endTile, 0.5);
+        console.log(grid);
+        break;
+      }
+      case "RECURSIVE_DIVISION": {
+        await recursiveDivision(grid, startTile, endTile, 0.5);
+        break;
+      }
     }
+    
+    console.log(grid);
+    setGrid(grid.slice());
+    setIsDisabled(false);
+
   }
 
   return (
@@ -41,6 +57,7 @@ export const Nav =({
           options={MAZES}
           onChange={(e) => handleGenerateMaze(e.target.value as Maze) }
           // onChange={(e) => console.log(e.target.value)} 
+          isDisabled={isDisabled}
         />
       </div>
     </div>
