@@ -26,11 +26,10 @@ const recursiveDivision = async (
     width: Math.floor((MAX_COLS - 1) / 2),
     speed
   });
-  await sleep(speed * 0.9 * 4000);
-  console.log("done");
+  await sleep(speed * 0.9 * 6000);
 }
 
-const recurse = async ({
+const recurse = ({
   grid,
   startTile,
   endTile,
@@ -112,9 +111,10 @@ const verticalDivision = async ({
           grid, 
           row: row + i,
           col: makeWallAt,
-          isWall: true
+          isWall: true,
+          animate: true
         })
-        await sleep(speed * 10); // Wait for animation
+        await sleep(speed * 15); // Wait for animation
       }
     }
   }
@@ -174,9 +174,10 @@ const horizontalDivision = async ({
           grid,
           row: makeWallAt,
           col: col + i,
-          isWall: true
+          isWall: true,
+          animate: true
         })
-        await sleep(speed * 10); // Wait for animation
+        await sleep(speed * 15); // Wait for animation
       }
     }
   }

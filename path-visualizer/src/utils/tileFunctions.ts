@@ -25,17 +25,19 @@ export const isSameTile = (t1: Tile, t2: Tile) => {
 
 // Get the style of the tile given its identity
 export const getTileStyle = ({
-  isStart,
-  isEnd,
-  isWall,
-  isPath,
-  isTraversed
+  isStart=false,
+  isEnd=false,
+  isWall=false,
+  isPath=false,
+  isTraversed=false, 
+  animate=false
 }: {
   isStart?: boolean,
   isEnd?: boolean,
   isWall?: boolean,
   isPath?: boolean,
-  isTraversed?: boolean
+  isTraversed?: boolean,
+  animate?: boolean
 }) => {
   let tileStyle: string;
   if (isStart) {
@@ -43,7 +45,7 @@ export const getTileStyle = ({
   } else if (isEnd) {
     tileStyle = END_TILE_STYLE;
   } else if (isWall) {
-    tileStyle = WALL_TILE_STYLE;
+    tileStyle = animate ? WALL_TILE_STYLE + " animate-wall" : WALL_TILE_STYLE;
   } else if (isPath) {
     tileStyle = PATH_TILE_STYLE;
   } else if (isTraversed) {
@@ -54,16 +56,17 @@ export const getTileStyle = ({
   return tileStyle;
 }
 
-// Change tile in grid
+// Change tile in grid. Assign 1 isX parameter to true only. 
+// Distance and parent can only be plugged if a change is wanted.
 export const setTileInGrid = ({
   grid,
   row,
   col,
-  isStart,
-  isEnd,
-  isWall,
-  isPath,
-  isTraversed,
+  isStart=false,
+  isEnd=false,
+  isWall=false,
+  isPath=false,
+  isTraversed=false,
   distance, 
   parent
 }: {
@@ -78,26 +81,14 @@ export const setTileInGrid = ({
   distance?: number,
   parent?: Tile | null
 }) => {
-  // grid[col][row].isStart = false;
-  // grid[col][row].isEnd = false;
-  // grid[col][row].isWall = false;
-  // grid[col][row].isPath = false;
-  // grid[col][row].isTraversed = false;
-  // Only 1 can be true!
-  if (isStart) {
-    grid[row][col].isStart = true;
-  } else if (isEnd) {
-    grid[row][col].isEnd = true;
-  } else if (isWall) {
-    grid[row][col].isWall = true;
-  } else if (isPath) {
-    grid[row][col].isPath = true;
-  } else if (isTraversed) {
-    grid[row][col].isTraversed = true;
-  } 
+  grid[row][col].isStart = isStart;
+  grid[row][col].isEnd = isEnd;
+  grid[row][col].isWall = isWall;
+  grid[row][col].isPath = isPath;
+  grid[row][col].isTraversed = isTraversed;
   if (distance) {
     grid[row][col].distance = distance;
-  } 
+  }
   if (parent) {
     grid[row][col].parent = parent;
   }
@@ -108,12 +99,12 @@ export const setTileInGrid = ({
 export const setTileInDOM = ({
   row,
   col,
-  isStart,
-  isEnd,
-  isWall,
-  isPath,
-  isTraversed,
-  extraStyles
+  isStart=false,
+  isEnd=false,
+  isWall=false,
+  isPath=false,
+  isTraversed=false,
+  animate=false
 }: {
   row: number,
   col: number,
@@ -122,30 +113,29 @@ export const setTileInDOM = ({
   isWall?: boolean,
   isPath?: boolean,
   isTraversed?: boolean,
-  extraStyles?: string
+  animate?: boolean
 }) => {
   const tileStyle = getTileStyle({
     isStart, 
     isEnd, 
     isWall,
     isPath,
-    isTraversed
+    isTraversed,
+    animate
   });
-  const moreStyles = extraStyles ? (" " + extraStyles) : ""
-  const finalStyle = tileStyle + moreStyles;
-  document.getElementById(`${row}-${col}`)!.className = finalStyle;
+  document.getElementById(`${row}-${col}`)!.className = tileStyle;
 }
 
 export const setAndStyleTile = ({
   grid, 
   row, 
   col,
-  isStart,
-  isEnd,
-  isWall,
-  isPath,
-  isTraversed,
-  extraStyles
+  isStart=false,
+  isEnd=false,
+  isWall=false,
+  isPath=false,
+  isTraversed=false,
+  animate=false
 }: {
   grid: Grid, 
   row: number, 
@@ -155,7 +145,7 @@ export const setAndStyleTile = ({
   isWall?: boolean,
   isPath?: boolean,
   isTraversed?: boolean,
-  extraStyles?: string
+  animate?: boolean
 }) => {
   setTileInGrid({
     grid,
@@ -175,6 +165,6 @@ export const setAndStyleTile = ({
     isWall,
     isPath,
     isTraversed,
-    extraStyles
+    animate
   })
 };

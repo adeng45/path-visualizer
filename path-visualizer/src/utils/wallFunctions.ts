@@ -17,7 +17,8 @@ export const createInitialWalls = (
                 grid,
                 row: row,
                 col,
-                isWall: true
+                isWall: true,
+                animate: true
               })
             }, 
             speed,
@@ -108,7 +109,7 @@ export const constructBorder = async (
           row, 
           col, 
           isWall: true,
-          extraStyles: "animate-wall"
+          animate: true
         });
         await sleep(delayAmount(speed, 0, 0));
       }

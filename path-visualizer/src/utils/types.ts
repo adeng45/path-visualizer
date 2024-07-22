@@ -2,11 +2,6 @@ export type Algorithm = "DIJKSTRA" | "A*" | "BFS" | "DFS";
 
 export type Maze = "NONE" | "BINARY_TREE" | "RECURSIVE_DIVISION";
 
-export interface MazeSelect {
-  name: string,
-  value: Maze
-}
-
 export type Grid = Tile[][];
 
 export type Tile = {
@@ -26,4 +21,14 @@ export type Speed = 2 | 1 | 0.5;
 export interface SpeedSelect {
   name: string, 
   value: Speed
+}
+
+export interface MazeSelect {
+  name: string,
+  value: Maze
+}
+
+export interface AlgorithmSelect {
+  name: string, 
+  value: Algorithm
 }
