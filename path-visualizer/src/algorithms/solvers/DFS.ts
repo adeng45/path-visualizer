@@ -1,7 +1,7 @@
 import { isSameTile, getUntraversedNeighbors, isTileInQueue, retrievePath } from "../../utils/tileFunctions";
 import { Grid, Tile } from "../../utils/types";
 
-const BFS = (grid: Grid, startTile: Tile, endTile: Tile) => {
+const DFS = (grid: Grid, startTile: Tile, endTile: Tile) => {
   const traversedTiles: Tile[] = []; // Initialize an array to store traversed tiles
   const base = grid[startTile.row][startTile.col]; // Get the start tile from the grid
   base.distance = 0; // Set the distance of the start tile to 0
@@ -10,7 +10,7 @@ const BFS = (grid: Grid, startTile: Tile, endTile: Tile) => {
 
   while (unTraversed.length) {
     // Continue while there are untraversed tiles
-    const tile = unTraversed.shift() as Tile; // Get the FIRST!! (BFS) tile from the queue
+    const tile = unTraversed.pop() as Tile; // Get the LAST!! (DFS) tile from the queue
     if (tile.isWall) continue; // Skip if the tile is a wall
     tile.isTraversed = true; // Mark the tile as traversed
     traversedTiles.push(tile); // Add the tile to the traversed tiles array
@@ -33,4 +33,4 @@ const BFS = (grid: Grid, startTile: Tile, endTile: Tile) => {
   return { traversedTiles, path }; // Return the traversed tiles and the path
 };
 
-export default BFS;
+export default DFS;

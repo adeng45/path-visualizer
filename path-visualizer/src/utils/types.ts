@@ -16,7 +16,7 @@ export type Tile = {
   parent: Tile | null;
 }
 
-export type Speed = 2 | 1 | 0.5;
+export type Speed = 0.5 | 1 | 2;
 
 export interface SpeedSelect {
   name: string, 

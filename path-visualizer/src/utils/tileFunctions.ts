@@ -47,9 +47,9 @@ export const getTileStyle = ({
   } else if (isWall) {
     tileStyle = animate ? WALL_TILE_STYLE + " animate-wall" : WALL_TILE_STYLE;
   } else if (isPath) {
-    tileStyle = PATH_TILE_STYLE;
+    tileStyle = animate ? PATH_TILE_STYLE + " animate-path" : PATH_TILE_STYLE;
   } else if (isTraversed) {
-    tileStyle = TRAVERSED_TILE_STYLE;
+    tileStyle = animate ? TRAVERSED_TILE_STYLE + " animate-traversed" : TRAVERSED_TILE_STYLE;
   } else {
     tileStyle = TILE_STYLE;
   }
@@ -135,7 +135,8 @@ export const setAndStyleTile = ({
   isWall=false,
   isPath=false,
   isTraversed=false,
-  animate=false
+  animate=false,
+  print=false,
 }: {
   grid: Grid, 
   row: number, 
@@ -145,8 +146,12 @@ export const setAndStyleTile = ({
   isWall?: boolean,
   isPath?: boolean,
   isTraversed?: boolean,
-  animate?: boolean
+  animate?: boolean,
+  print?:boolean
 }) => {
+  if (print) {
+    console.log(row, col);
+  }
   setTileInGrid({
     grid,
     row,
@@ -168,3 +173,41 @@ export const setAndStyleTile = ({
     animate
   })
 };
+
+export const getUntraversedNeighbors = (grid: Grid, tile: Tile) => {
+  const { row, col } = tile;
+  const neighbors = [];
+
+  if (row > 0) {
+    neighbors.push(grid[row - 1][col]);
+  }
+  if (row < MAX_ROWS - 1) {
+    neighbors.push(grid[row + 1][col]);
+  }
+  if (col > 0) {
+    neighbors.push(grid[row][col - 1]);
+  }
+  if (col < MAX_COLS - 1) {
+    neighbors.push(grid[row][col + 1]);
+  }
+  return neighbors.filter((neighbor) => !neighbor.isTraversed);
+};
+
+export const isTileInQueue = (tile: Tile, queue: Tile[]) => {
+  for (let i = 0; i < queue.length; i++) {
+    if (isSameTile(tile, queue[i])) return true;
+  }
+  return false;
+}
+
+export const retrievePath = (grid: Grid, startTile: Tile, endTile: Tile) => {
+  const path = []; // Initialize an array to store the path
+  let tile = grid[endTile.row][endTile.col]; // Start from the end tile
+  while (!isSameTile(tile, startTile)) {
+    // Backtrack until the start tile
+    tile.isPath = true; // Mark the tile as part of the path
+    path.unshift(tile); // Add the tile to the path
+    tile = tile.parent!; // Move to the parent tile
+  }
+  return path;
+}

@@ -1,5 +1,5 @@
 import { Grid, Speed, Tile } from "./types";
-import { delayedExecute, sleep, delayAmount } from "./helperFunctions";
+import { delayedExecute, sleep, delayAmount } from "./miscFunctions";
 import { isStartOrEndTile, setAndStyleTile } from "./tileFunctions";
 import { MAX_COLS, MAX_ROWS } from "./constants";
 
@@ -21,9 +21,11 @@ export const createInitialWalls = (
                 animate: true
               })
             }, 
-            speed,
-            row,
-            col
+            delayInfo: {
+              speed,
+              row,
+              col
+            }
           })
         };
       }
@@ -49,9 +51,11 @@ export const destroyWall = (
           isWall: false
         })
       }, 
-      speed,
-      row,
-      col: col + 1,
+      delayInfo: {
+        speed,
+        row,
+        col: col + 1
+      }
     })
   }
   // Always a bottom wall to destroy
@@ -65,18 +69,21 @@ export const destroyWall = (
           isWall: false
         })
       }, 
-      speed,
-      row: row + 1,
-      col,
+      delayInfo: {
+        speed,
+        row: row + 1,
+        col,
+      }
     })
   } 
 };
 
-export const constructBorder = async (
+export const constructBorder = (
   grid: Grid,
   startTile: Tile,
   endTile: Tile,
-  speed: Speed
+  timeAllowed: number,
+  speed: number
 ) => {
   const shape = [
     { row: 0, col: 1 },
@@ -85,40 +92,51 @@ export const constructBorder = async (
     { row: -1, col: 0 },
   ];
 
-  let row = 0;
-  let col = 0;
+  let r = 0;
+  let c = 0;
   let sleepTime = 0;
+  const interval = timeAllowed / (2 * MAX_COLS + 2 * MAX_ROWS);
+
 
   for (let i = 0; i < 4; i++) {
     const direction = shape[i];
 
     while (
-      row + direction.row >= 0 &&
-      row + direction.row < MAX_ROWS &&
-      col + direction.col >= 0 &&
-      col + direction.col < MAX_COLS
+      r + direction.row >= 0 &&
+      r + direction.row < MAX_ROWS &&
+      c + direction.col >= 0 &&
+      c + direction.col < MAX_COLS
     ) {
-      row += direction.row;
-      col += direction.col;
+      r += direction.row;
+      c += direction.col;
+
+      // Need to copy row, col literal values
+      let row = r;
+      let col = c;
 
       if (
-        !isStartOrEndTile(row, col)      
+        !isStartOrEndTile(r, c)      
       ) {
-        setAndStyleTile({
-          grid, 
-          row, 
-          col, 
-          isWall: true,
-          animate: true
+        delayedExecute({
+          f: () => {
+            setAndStyleTile({
+              grid, 
+              row, 
+              col, 
+              isWall: true,
+              animate: true
+            })
+          },
+          fixedAmount: sleepTime,
         });
-        await sleep(delayAmount(speed, 0, 0));
+        sleepTime += interval;
       }
-      sleepTime += 100;
     }
 
-    if (row < 0) row = 0;
-    if (row >= MAX_ROWS) row = MAX_ROWS - 1;
-    if (col < 0) col = 0;
-    if (col >= MAX_COLS) col = MAX_COLS - 1;
+    if (r < 0) r = 0;
+    if (r >= MAX_ROWS) r = MAX_ROWS - 1;
+    if (c < 0) c = 0;
+    if (c >= MAX_COLS) c = MAX_COLS - 1;
   }
+
 }

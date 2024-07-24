@@ -1,6 +1,7 @@
 import { Grid, Speed, Tile } from "./types";
-import { MAX_ROWS, MAX_COLS, PATH_TILE_STYLE, TRAVERSED_TILE_STYLE, SPEEDS } from "./constants";
-import { isStartOrEndTile, setTileInGrid, setTileInDOM, isSameTile } from "./tileFunctions";
+import { MAX_ROWS, MAX_COLS, SPEEDS } from "./constants";
+import { isStartOrEndTile, setTileInGrid, setTileInDOM } from "./tileFunctions";
+import { delayedExecute } from "./miscFunctions";
 
 // Helper for grid (javascript object) initialization
 const initRow = (row: number, startTile: Tile, endTile: Tile) => {
@@ -65,26 +66,42 @@ export const animatePath = (
   speed: Speed
 ) => {
   for (let i = 0; i < traversedTiles.length; i++) {
-    setTimeout(() => {
-      const tile = traversedTiles[i];
-      if (!isSameTile(tile, startTile) && !isSameTile(tile, endTile)) {
-        document.getElementById(
-          `${tile.row}-${tile.col}`
-        )!.className = `${TRAVERSED_TILE_STYLE} animate-traversed`;
-      }
-    }, 8 * i * SPEEDS.find((s) => s.value === speed)!.value); // Calculate delay based on speed
+    const tile = traversedTiles[i];
+    if (!isStartOrEndTile(tile.row, tile.col)) {
+      delayedExecute({
+        f: () => {
+          setTileInDOM({
+            row: tile.row,
+            col: tile.col,
+            isTraversed: true,
+            animate: true
+          })
+        },
+        fixedAmount: 8 * i * SPEEDS.find((s) => s.value === speed)!.value 
+      });
+    }
   }
 
-  setTimeout(() => {
-    for (let i = 0; i < path.length; i++) {
-      setTimeout(() => {
+  delayedExecute({
+    f: () => {
+      for (let i = 0; i < path.length; i++) {
         const tile = path[i];
-        if (!isSameTile(tile, startTile) && !isSameTile(tile, endTile)) {
-          document.getElementById(
-            `${tile.row}-${tile.col}`
-          )!.className = `${PATH_TILE_STYLE} animate-path`;
+        if (!isStartOrEndTile(tile.row, tile.col)) {
+          delayedExecute({
+            f: () => {
+              setTileInDOM({
+                row: tile.row, 
+                col: tile.col,
+                isPath: true,
+                animate: true
+              })
+            }, 
+            fixedAmount: 30 * i * SPEEDS.find((s) => s.value === speed)!.value
+          })
         }
-      }, 30 * i * SPEEDS.find((s) => s.value === speed)!.value); // Calculate delay based on speed
-    }
-  }, 8 * traversedTiles.length * SPEEDS.find((s) => s.value === speed)!.value); // Calculate delay based on the total traversal time
-};
+      }
+    },
+    fixedAmount: 8 * traversedTiles.length * SPEEDS.find((s) => s.value === speed)!.value
+  });
+
+}

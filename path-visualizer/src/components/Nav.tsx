@@ -9,6 +9,9 @@ import binaryTree from "../algorithms/maze/binaryTree";
 import recursiveDivision from "../algorithms/maze/recursiveDivision";
 import { resetGrid, animatePath } from "../utils/gridFunctions";
 import BFS from "../algorithms/solvers/BFS";
+import { PlayButton } from "./PlayButton";
+import { setAndStyleTile } from "../utils/tileFunctions";
+import { delayedExecute } from "../utils/miscFunctions";
 
 export const Nav =({
   isVisualizationRunningRef,
@@ -30,27 +33,32 @@ export const Nav =({
       return;
     }
 
-    // switch (algorithm) {
-    //   case "DIJKSTRA": {
-    //     break;
-    //   }
+    switch (algorithm) {
+      case "DIJKSTRA": {
+        break;
+      }
 
-    const { traversedTiles, path } = BFS(
-      grid,
-      startTile,
-      endTile,
-    );
+      case "BFS": {
+
+      }
+
+      case "DFS": {
+        
+      }
 
     animatePath(traversedTiles, path, startTile, endTile, speed);
     setIsDisabled(true);
     isVisualizationRunningRef.current = true;
-    setTimeout(() => {
-      const newGrid = grid.slice();
-      setGrid(newGrid);
-      setIsGraphVisualized(true);
-      setIsDisabled(false);
-      isVisualizationRunningRef.current = false;
-    }, 8 * (traversedTiles.length + 8 * 2) + 30 * (path.length + 60) * SPEEDS.find((s) => s.value === speed)!.value);
+    delayedExecute({
+      f: () => {
+        const newGrid = grid.slice();
+        setGrid(newGrid);
+        setIsGraphVisualized(true);
+        setIsDisabled(false);
+        isVisualizationRunningRef.current = false;
+      },
+      fixedAmount: 8 * (traversedTiles.length + 8 * 2) + 30 * (path.length + 60) * SPEEDS.find((s) => s.value === speed)!.value
+    })
   }
 
   const handleGenerateMaze = async (maze: Maze) => {
@@ -71,7 +79,7 @@ export const Nav =({
         break;
       }
     }
-    
+
     setGrid(grid.slice());
     setIsDisabled(false);
 
@@ -105,6 +113,7 @@ export const Nav =({
           onChange={(e) => setSpeed(Number(e.target.value) as Speed)}
           isDisabled={isDisabled}
         />
+        <PlayButton isGraphVisualized={isGraphVisualized} handleRunAlgorithm={() => handleRunAlgorithm(algorithm)} isDisabled={isDisabled} />
       </div>
     </div>
   );

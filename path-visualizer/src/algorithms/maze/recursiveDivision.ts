@@ -1,5 +1,5 @@
 import { Grid, Tile, Speed } from "../../utils/types"
-import { delayAmount, getRandomInt, sleep } from "../../utils/helperFunctions";
+import { delayAmount, delayedExecute, getRandomInt, sleep } from "../../utils/miscFunctions";
 import { isStartOrEndTile, setAndStyleTile } from "../../utils/tileFunctions";
 import { MAX_COLS, MAX_ROWS } from "../../utils/constants";
 import { constructBorder } from "../../utils/wallFunctions";
@@ -10,13 +10,7 @@ const recursiveDivision = async (
   endTile: Tile,
   speed: Speed
 ) => {
-  constructBorder(
-    grid, 
-    startTile,
-    endTile,
-    speed
-  )
-  recurse({
+  const timeToConstructBorder = recurse({
     grid, 
     startTile,
     endTile,
@@ -24,9 +18,17 @@ const recursiveDivision = async (
     col: 1,
     height: Math.floor((MAX_ROWS - 1) / 2),
     width: Math.floor((MAX_COLS - 1) / 2),
+    timeOffset: 0,
     speed
   });
-  await sleep(speed * 0.9 * 6000);
+  constructBorder(
+    grid, 
+    startTile,
+    endTile,
+    timeToConstructBorder,
+    speed
+  )
+  await sleep(timeToConstructBorder);
 }
 
 const recurse = ({
@@ -38,6 +40,7 @@ const recurse = ({
   height,
   width,
   speed,
+  timeOffset
 }: {
   grid: Grid;
   startTile: Tile;
@@ -46,14 +49,15 @@ const recurse = ({
   col: number;
   height: number;
   width: number;
+  timeOffset: number,
   speed: Speed;
 }) => {
   if (height <= 1 || width <= 1) {
-    return; // Base case: if the section is too small, stop recursion
+    return timeOffset; // Base case: if the section is too small, stop recursion
   }
 
   if (height > width) {
-    horizontalDivision({
+    return horizontalDivision({
       // Divide horizontally if height is greater than width
       grid,
       startTile,
@@ -62,10 +66,11 @@ const recurse = ({
       col,
       height,
       width,
+      timeOffset,
       speed,
     });
   } else {
-    verticalDivision({
+    return verticalDivision({
       // Divide vertically if width is greater than or equal to height
       grid,
       startTile,
@@ -74,12 +79,13 @@ const recurse = ({
       col,
       height,
       width,
+      timeOffset,
       speed,
     });
   }
 }
 
-const verticalDivision = async ({
+const verticalDivision = ({
   grid,
   startTile,
   endTile,
@@ -87,6 +93,7 @@ const verticalDivision = async ({
   col,
   height,
   width,
+  timeOffset,
   speed,
 }: {
   grid: Grid;
@@ -96,8 +103,9 @@ const verticalDivision = async ({
   col: number;
   height: number;
   width: number;
+  timeOffset: number;
   speed: Speed;
-}) => {
+}) : number => {
   const makeWallAt = col + getRandomInt(0, width - 1) * 2 + 1; // Determine the column to place the wall
   const makePassageAt = row + getRandomInt(0, height) * 2; // Determine the row to leave a passage
 
@@ -107,42 +115,52 @@ const verticalDivision = async ({
       if (
         !isStartOrEndTile(row + i, makeWallAt) // Check if the current tile is not the start/end tile
       ) {
-        setAndStyleTile({
-          grid, 
-          row: row + i,
-          col: makeWallAt,
-          isWall: true,
-          animate: true
-        })
-        await sleep(speed * 15); // Wait for animation
+        delayedExecute({
+          f: () => {
+            setAndStyleTile({
+              grid, 
+              row: row + i,
+              col: makeWallAt,
+              isWall: true,
+              animate: true
+            })
+          },
+          fixedAmount: timeOffset
+        });
+        timeOffset += speed * 15;
       }
     }
   }
 
   // Recursively divide the sections to the left and right of the wall
-  recurse({
-    grid,
-    startTile,
-    endTile,
-    row,
-    col,
-    height,
-    width: (makeWallAt - col + 1) / 2,
-    speed,
-  });
-  recurse({
-    grid,
-    startTile,
-    endTile,
-    row,
-    col: makeWallAt + 1,
-    height,
-    width: width - (makeWallAt - col + 1) / 2,
-    speed,
-  });
+  return Math.max(
+    recurse({
+      grid,
+      startTile,
+      endTile,
+      row,
+      col,
+      height,
+      width: (makeWallAt - col + 1) / 2,
+      timeOffset,
+      speed,
+    }),
+    recurse({
+      grid,
+      startTile,
+      endTile,
+      row,
+      col: makeWallAt + 1,
+      height,
+      width: width - (makeWallAt - col + 1) / 2,
+      timeOffset,
+      speed,
+    })
+  )
+
 }
 
-const horizontalDivision = async ({
+const horizontalDivision = ({
   grid,
   startTile,
   endTile,
@@ -150,6 +168,7 @@ const horizontalDivision = async ({
   col,
   height,
   width,
+  timeOffset,
   speed,
 }: {
   grid: Grid;
@@ -159,8 +178,9 @@ const horizontalDivision = async ({
   col: number;
   height: number;
   width: number;
+  timeOffset: number;
   speed: Speed;
-}) => {
+}) : number => {
   const makeWallAt = row + getRandomInt(0, height - 1) * 2 + 1; // Determine the row to place the wall
   const makePassageAt = col + getRandomInt(0, width) * 2; // Determine the column to leave a passage
 
@@ -170,39 +190,48 @@ const horizontalDivision = async ({
       if (
         !isStartOrEndTile(makeWallAt, col + i) // Check if the current tile is not the start tile
       ) {
-        setAndStyleTile({
-          grid,
-          row: makeWallAt,
-          col: col + i,
-          isWall: true,
-          animate: true
-        })
-        await sleep(speed * 15); // Wait for animation
+        delayedExecute({
+          f: () => {
+            setAndStyleTile({
+              grid,
+              row: makeWallAt,
+              col: col + i,
+              isWall: true,
+              animate: true
+            })
+          },
+          fixedAmount: timeOffset
+        });
+        timeOffset += speed * 15;
       }
     }
   }
 
   // Recursively divide the sections above and below the wall
-  recurse({
-    grid,
-    startTile,
-    endTile,
-    row,
-    col,
-    height: (makeWallAt - row + 1) / 2,
-    width,
-    speed,
-  });
-  recurse({
-    grid,
-    startTile,
-    endTile,
-    row: makeWallAt + 1,
-    col,
-    height: height - (makeWallAt - row + 1) / 2,
-    width,
-    speed,
-  });
+  return Math.max(
+    recurse({
+      grid,
+      startTile,
+      endTile,
+      row,
+      col,
+      height: (makeWallAt - row + 1) / 2,
+      width,
+      timeOffset,
+      speed,
+    }),
+    recurse({
+      grid,
+      startTile,
+      endTile,
+      row: makeWallAt + 1,
+      col,
+      height: height - (makeWallAt - row + 1) / 2,
+      width,
+      timeOffset,
+      speed,
+    })
+  );
 }
 
 export default recursiveDivision;

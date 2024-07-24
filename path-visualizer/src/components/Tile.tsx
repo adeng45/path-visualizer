@@ -36,7 +36,8 @@ export const Tile = ({
     isEnd,
     isWall,
     isPath,
-    isTraversed
+    isTraversed,
+    animate: true
   })
 
   // const borderStyle =
