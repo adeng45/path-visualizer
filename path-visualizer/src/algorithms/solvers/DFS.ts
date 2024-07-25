@@ -12,6 +12,7 @@ const DFS = (grid: Grid, startTile: Tile, endTile: Tile) => {
     // Continue while there are untraversed tiles
     const tile = unTraversed.pop() as Tile; // Get the LAST!! (DFS) tile from the queue
     if (tile.isWall) continue; // Skip if the tile is a wall
+    if (tile.distance === Infinity) break; // Break if the tile's distance is infinity
     tile.isTraversed = true; // Mark the tile as traversed
     traversedTiles.push(tile); // Add the tile to the traversed tiles array
     if (isSameTile(tile, endTile)) break; // Break if the tile is the end tile
@@ -30,6 +31,11 @@ const DFS = (grid: Grid, startTile: Tile, endTile: Tile) => {
   }
 
   const path = retrievePath(grid, startTile, endTile);
+  console.log(traversedTiles, path);
+
+  // let traversedTiles = Array.apply(null, Array(40)).map((x, i) => { return grid[0][i] });
+  // let path = traversedTiles;
+
   return { traversedTiles, path }; // Return the traversed tiles and the path
 };
 

@@ -1,23 +1,16 @@
-import { MutableRefObject, useState } from "react";
+import { useState } from "react";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { useSpeed } from "../hooks/useSpeed";
 import { Select } from "./Select";
-import { MAX_COLS, MAX_ROWS, MAZES, ALGORITHMS, SPEEDS } from "../utils/constants";
-import { Algorithm, Maze, Speed, Tile } from "../utils/types";
+import { MAZES, ALGORITHMS, SPEEDS } from "../utils/constants";
+import { Algorithm, Maze, Speed } from "../utils/types";
 import { useTile } from "../hooks/useTile";
-import binaryTree from "../algorithms/maze/binaryTree";
-import recursiveDivision from "../algorithms/maze/recursiveDivision";
-import { resetGrid, animatePath } from "../utils/gridFunctions";
-import BFS from "../algorithms/solvers/BFS";
+import { resetGrid } from "../utils/gridFunctions";
 import { PlayButton } from "./PlayButton";
-import { setAndStyleTile } from "../utils/tileFunctions";
-import { delayedExecute } from "../utils/miscFunctions";
+import runSolverAlgorithm from "../algorithms/solvers/runSolverAlgorithm";
+import runMazeAlgorithm from "../algorithms/maze/runMazeAlgorithm";
 
-export const Nav =({
-  isVisualizationRunningRef,
-}: {
-  isVisualizationRunningRef: MutableRefObject<boolean>;
-}) => {
+export const Nav = () => {
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isGraphVisualized, setIsGraphVisualized] = useState<boolean>(false);
@@ -29,56 +22,27 @@ export const Nav =({
     if (isGraphVisualized) {
       setIsGraphVisualized(false);
       resetGrid(grid, startTile, endTile);
-      setGrid(grid.slice());
-      return;
     }
 
-    switch (algorithm) {
-      case "DIJKSTRA": {
-        break;
-      }
-
-      case "BFS": {
-
-      }
-
-      case "DFS": {
-        
-      }
-
-    animatePath(traversedTiles, path, startTile, endTile, speed);
+    setAlgorithm(algorithm);
     setIsDisabled(true);
-    isVisualizationRunningRef.current = true;
-    delayedExecute({
-      f: () => {
-        const newGrid = grid.slice();
-        setGrid(newGrid);
-        setIsGraphVisualized(true);
-        setIsDisabled(false);
-        isVisualizationRunningRef.current = false;
-      },
-      fixedAmount: 8 * (traversedTiles.length + 8 * 2) + 30 * (path.length + 60) * SPEEDS.find((s) => s.value === speed)!.value
-    })
+
+    await runSolverAlgorithm(algorithm, grid, startTile, endTile, speed);
+
+    setGrid(grid.slice());
+    setIsDisabled(false);
+    setIsGraphVisualized(true);
+
   }
 
   const handleGenerateMaze = async (maze: Maze) => {
+
+    resetGrid(grid, startTile, endTile);
+
     setMaze(maze)
     setIsDisabled(true);
 
-    switch (maze) {
-      case "NONE": {
-        resetGrid(grid, startTile, endTile);
-        break;
-      }
-      case "BINARY_TREE": {
-        await binaryTree(grid, startTile, endTile, speed);
-        break;
-      }
-      case "RECURSIVE_DIVISION": {
-        await recursiveDivision(grid, startTile, endTile, speed);
-        break;
-      }
-    }
+    await runMazeAlgorithm(maze, grid, startTile, endTile, speed);
 
     setGrid(grid.slice());
     setIsDisabled(false);
@@ -93,7 +57,6 @@ export const Nav =({
         </h1>
         <Select
           label="Maze"
-          value={maze}
           options={MAZES}
           onChange={(e) => handleGenerateMaze(e.target.value as Maze) }
           // onChange={(e) => console.log(e.target.value)} 
@@ -101,14 +64,12 @@ export const Nav =({
         />
         <Select
           label="Algorithm"
-          value={algorithm}
           options={ALGORITHMS}
-          onChange={(e) => handleRunAlgorithm(e.target.value as Algorithm)}
+          onChange={(e) => setAlgorithm(e.target.value as Algorithm)}
           isDisabled={isDisabled}
         />
         <Select
           label="Speed"
-          value={speed}
           options={SPEEDS}
           onChange={(e) => setSpeed(Number(e.target.value) as Speed)}
           isDisabled={isDisabled}

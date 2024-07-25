@@ -1,6 +1,6 @@
 import { Grid, Speed, Tile } from "./types";
-import { MAX_ROWS, MAX_COLS, SPEEDS } from "./constants";
-import { isStartOrEndTile, setTileInGrid, setTileInDOM } from "./tileFunctions";
+import { MAX_ROWS, MAX_COLS, DELAY_CONSTANT, LONG_DELAY_CONSTANT } from "./constants";
+import { isStartOrEndTile, setTileInGrid, setTileInDOM, isSameTile, setAndStyleTile } from "./tileFunctions";
 import { delayedExecute } from "./miscFunctions";
 
 // Helper for grid (javascript object) initialization
@@ -39,19 +39,28 @@ export const resetGrid = (
 ) => {
   for (let row = 0; row < MAX_ROWS; row++) {
     for (let col = 0; col < MAX_COLS; col++) {
-      // Sets to a blank tile
-      setTileInGrid({
-        grid, 
-        row, 
-        col
-      })
-      if (!isStartOrEndTile(row, col)) {
-        // Sets to a blank tile style
-        setTileInDOM({
+      if (isSameTile(grid[row][col], startTile)) {
+        setAndStyleTile({
+          grid,
+          row, 
+          col,
+          isStart: true
+        })
+      }
+      else if (isSameTile(grid[row][col], endTile)) {
+        setAndStyleTile({
+          grid,
+          row, 
+          col,
+          isEnd: true
+        })
+      }
+      else {
+        setAndStyleTile({
+          grid, 
           row, 
           col
         })
-        
       }
     }
   }
@@ -77,7 +86,7 @@ export const animatePath = (
             animate: true
           })
         },
-        fixedAmount: 8 * i * SPEEDS.find((s) => s.value === speed)!.value 
+        fixedAmount: DELAY_CONSTANT * i * speed
       });
     }
   }
@@ -96,12 +105,13 @@ export const animatePath = (
                 animate: true
               })
             }, 
-            fixedAmount: 30 * i * SPEEDS.find((s) => s.value === speed)!.value
+            fixedAmount: LONG_DELAY_CONSTANT * i * speed
           })
         }
       }
     },
-    fixedAmount: 8 * traversedTiles.length * SPEEDS.find((s) => s.value === speed)!.value
+    fixedAmount: DELAY_CONSTANT * traversedTiles.length * speed
   });
 
 }
+

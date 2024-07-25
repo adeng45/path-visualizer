@@ -6,15 +6,14 @@ import { useRef } from "react"
 import { Nav } from "./components/Nav"
 
 function App() {
-  const isVisualizationRunningRef = useRef(false);
 
   return (
     <>
       <PathfindingProvider>
         <TileContextProvider>
           <SpeedContextProvider>
-            <Nav isVisualizationRunningRef={isVisualizationRunningRef} />
-            <Grid isVisualizationRunningRef={isVisualizationRunningRef}/>
+            <Nav />
+            <Grid />
           </SpeedContextProvider>
         </TileContextProvider>
       </PathfindingProvider>

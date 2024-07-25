@@ -1,14 +1,7 @@
-import { Grid, Speed, Tile } from "./types"
+import { Speed, Grid, Tile } from "./types"
 import { 
-  START_TILE_STYLE, 
-  END_TILE_STYLE, 
-  WALL_TILE_STYLE,
-  PATH_TILE_STYLE,
-  TRAVERSED_TILE_STYLE,
-  TILE_STYLE,
-  MAX_ROWS, 
+  MAX_ROWS,
   MAX_COLS, 
-  SPEEDS, 
   DELAY_CONSTANT,
 } 
 from "./constants"
@@ -78,3 +71,38 @@ export const getRandomInt = (min: number, max: number) => {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min);
 }
+
+const retrieveHeuristicCost = (currentTile: Tile, endTile: Tile) => {
+  const manhattanDistance = 1; // Define the constant multiplier for Manhattan distance
+  const r = Math.abs(currentTile.row - endTile.row); // Calculate the absolute difference in rows between the current tile and the end tile
+  const c = Math.abs(currentTile.col - endTile.col); // Calculate the absolute difference in columns between the current tile and the end tile
+  return manhattanDistance * (r + c); // Return the Manhattan distance (sum of row and column differences)
+};
+
+export const initHeuristicCost = (grid: Grid, endTile: Tile) => {
+  const heuristicCost = []; // Initialize an empty array to store heuristic costs
+  for (let i = 0; i < MAX_ROWS; i += 1) {
+    // Loop through each row in the grid
+    const row = []; // Initialize an empty array to store heuristic costs for the current row
+    for (let j = 0; j < MAX_COLS; j += 1) {
+      // Loop through each column in the current row
+      row.push(retrieveHeuristicCost(grid[i][j], endTile)); // Calculate and add the heuristic cost for the current tile
+    }
+    heuristicCost.push(row); // Add the row of heuristic costs to the heuristicCost array
+  }
+  return heuristicCost; // Return the 2D array of heuristic costs
+};
+
+export const initFunctionCost = () => {
+  const functionCost = []; // Initialize an empty array to store function costs
+  for (let i = 0; i < MAX_ROWS; i += 1) {
+    // Loop through each row in the grid
+    const row = []; // Initialize an empty array to store function costs for the current row
+    for (let j = 0; j < MAX_COLS; j += 1) {
+      // Loop through each column in the current row
+      row.push(Infinity); // Set the initial function cost for each tile to Infinity
+    }
+    functionCost.push(row); // Add the row of function costs to the functionCost array
+  }
+  return functionCost; // Return the 2D array of function costs
+};

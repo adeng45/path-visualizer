@@ -3,6 +3,7 @@ import { MazeSelect, SpeedSelect, AlgorithmSelect } from "./types";
 export const MAX_ROWS = 39;
 export const MAX_COLS = 49;
 export const DELAY_CONSTANT = 8;
+export const LONG_DELAY_CONSTANT = 30;
 
 export const START_TILE_CONFIGURATION = {
   row: 1, 
@@ -45,7 +46,8 @@ export const MAZES: MazeSelect[] = [
 export const ALGORITHMS: AlgorithmSelect[] = [
   { name: "Dijkstra", value: "DIJKSTRA" },
   { name: "Breadth First Search", value: "BFS" },
-  { name: "Depth First Search", value: "DFS" }
+  { name: "Depth First Search", value: "DFS" },
+  { name: "A* Estimation", value: "A*"}
 ]
 
 export const SPEEDS: SpeedSelect[] = [

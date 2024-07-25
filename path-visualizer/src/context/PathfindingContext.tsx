@@ -17,7 +17,7 @@ export interface PathfindingContextInterface {
 export const PathfindingContext = createContext<PathfindingContextInterface | undefined>(undefined);
 
 export const PathfindingProvider = ({children} : {children: ReactNode}) => {
-  const [algorithm, setAlgorithm] = useState<Algorithm>("BFS");
+  const [algorithm, setAlgorithm] = useState<Algorithm>("DIJKSTRA");
   const [maze, setMaze] = useState<Maze>("NONE");
   const [grid, setGrid] = useState<Grid>(initGrid(START_TILE_CONFIGURATION, END_TILE_CONFIGURATION));
   const [isGraphVisualized, setIsGraphVisualized] = useState<boolean>(false);

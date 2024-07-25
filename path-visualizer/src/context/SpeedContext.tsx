@@ -9,7 +9,7 @@ export interface SpeedContextInterface {
 export const SpeedContext = createContext<SpeedContextInterface | undefined>(undefined);
 
 export const SpeedContextProvider = ({children}: {children: ReactNode}) => {
-	const [speed, setSpeed] = useState<Speed>(1);
+	const [speed, setSpeed] = useState<Speed>(0.5);
 
 	return (
 		<SpeedContext.Provider

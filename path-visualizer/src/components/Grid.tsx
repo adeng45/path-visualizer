@@ -6,17 +6,13 @@ import { MutableRefObject, useState, useRef } from "react";
 import { isStartOrEndTile } from "../utils/tileFunctions";
 import { setTileInGrid } from "../utils/tileFunctions";
 
-export const Grid = ({
-  isVisualizationRunningRef
-}:{
-  isVisualizationRunningRef: MutableRefObject<boolean>
-}) => {
+export const Grid = () => {
 
   const { grid, setGrid } = usePathfinding();
   const isMouseDownRef = useRef<boolean>(false);
 
   const handleMouseDown = (row: number, col: number) => {
-    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col)) {
+    if (isStartOrEndTile(row, col)) {
       return;
     }
     isMouseDownRef.current = true;
@@ -30,7 +26,7 @@ export const Grid = ({
   }
 
   const handleMouseEnter = (row: number, col: number) => {
-    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col) || !isMouseDownRef.current) {
+    if (isStartOrEndTile(row, col) || !isMouseDownRef.current) {
       return;
     }
     setTileInGrid({
@@ -43,7 +39,7 @@ export const Grid = ({
   }
 
   const handleMouseUp = (row: number, col: number) => {
-    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col)) {
+    if (isStartOrEndTile(row, col)) {
       return;
     }
     isMouseDownRef.current = false;

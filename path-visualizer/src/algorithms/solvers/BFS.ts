@@ -30,6 +30,8 @@ const BFS = (grid: Grid, startTile: Tile, endTile: Tile) => {
   }
 
   const path = retrievePath(grid, startTile, endTile);
+  console.log(traversedTiles, path);
+
   return { traversedTiles, path }; // Return the traversed tiles and the path
 };
 

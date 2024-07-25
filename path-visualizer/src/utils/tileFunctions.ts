@@ -200,6 +200,15 @@ export const isTileInQueue = (tile: Tile, queue: Tile[]) => {
   return false;
 }
 
+export const removeTileFromQueue = (tile: Tile, queue: Tile[]) => {
+  for (let i = 0; i < queue.length; i++) {
+    if (isSameTile(tile, queue[i])) {
+      queue.splice(i, 1);
+      break;
+    }
+  }
+}
+
 export const retrievePath = (grid: Grid, startTile: Tile, endTile: Tile) => {
   const path = []; // Initialize an array to store the path
   let tile = grid[endTile.row][endTile.col]; // Start from the end tile

@@ -1,16 +1,13 @@
 import { ChangeEvent } from "react";
 
 export const Select = ({
-  value,
   onChange,
   options,
   label,
   isDisabled,
 }: {
-  value: string | number;
   label: string;
   onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
-  // onChange: () => void,
   options: { value: string | number; name: string }[];
   isDisabled?: boolean;
 }) => {
