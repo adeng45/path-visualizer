@@ -21,7 +21,12 @@ export const Nav = () => {
   const handleRunAlgorithm = async (algorithm: Algorithm) => {
     if (isGraphVisualized) {
       setIsGraphVisualized(false);
-      resetGrid(grid, startTile, endTile);
+      resetGrid({
+        grid, 
+        startTile, 
+        endTile,
+        keepWalls: true
+      });
     }
 
     setAlgorithm(algorithm);
@@ -37,7 +42,11 @@ export const Nav = () => {
 
   const handleGenerateMaze = async (maze: Maze) => {
 
-    resetGrid(grid, startTile, endTile);
+    resetGrid({
+      grid, 
+      startTile, 
+      endTile,
+    });
 
     setMaze(maze)
     setIsDisabled(true);
@@ -46,35 +55,41 @@ export const Nav = () => {
 
     setGrid(grid.slice());
     setIsDisabled(false);
+    setIsGraphVisualized(false);
 
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[4.5rem] border-b shadow-gray-600 sm:px-5 px-0">
+    <div className="flex items-center justify-center min-h-[4.5rem] shadow-gray-600 sm:px-5 px-0">
       <div className="flex items-center lg:justify-between justify-center w-full sm:w-[52rem]">
         <h1 className="lg:flex hidden w-[40%] text-2xl pl-1">
           Pathfinding Visualizer
         </h1>
-        <Select
-          label="Maze"
-          options={MAZES}
-          onChange={(e) => handleGenerateMaze(e.target.value as Maze) }
-          // onChange={(e) => console.log(e.target.value)} 
-          isDisabled={isDisabled}
-        />
-        <Select
-          label="Algorithm"
-          options={ALGORITHMS}
-          onChange={(e) => setAlgorithm(e.target.value as Algorithm)}
-          isDisabled={isDisabled}
-        />
-        <Select
-          label="Speed"
-          options={SPEEDS}
-          onChange={(e) => setSpeed(Number(e.target.value) as Speed)}
-          isDisabled={isDisabled}
-        />
-        <PlayButton isGraphVisualized={isGraphVisualized} handleRunAlgorithm={() => handleRunAlgorithm(algorithm)} isDisabled={isDisabled} />
+        <div className="flex sm:items-end items-center justify-start sm:justify-between sm:flex-row flex-col sm:space-y-0 space-y-3 sm:py-0 py-4 sm:space-x-4">
+          <Select
+            label="Maze"
+            options={MAZES}
+            onChange={(e) => handleGenerateMaze(e.target.value as Maze)}
+            isDisabled={isDisabled}
+          />
+          <Select
+            label="Algorithm"
+            options={ALGORITHMS}
+            onChange={(e) => setAlgorithm(e.target.value as Algorithm)}
+            isDisabled={isDisabled}
+          />
+          <Select
+            label="Speed"
+            options={SPEEDS}
+            onChange={(e) => setSpeed(Number(e.target.value) as Speed)}
+            isDisabled={isDisabled}
+          />
+          <PlayButton 
+            isGraphVisualized={isGraphVisualized} 
+            handleRunAlgorithm={() => handleRunAlgorithm(algorithm)} 
+            isDisabled={isDisabled}
+           />
+        </div>
       </div>
     </div>
   );

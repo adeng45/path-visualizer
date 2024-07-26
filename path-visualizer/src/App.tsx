@@ -2,7 +2,6 @@ import { PathfindingProvider } from "./context/PathfindingContext"
 import { SpeedContextProvider } from "./context/SpeedContext"
 import { TileContextProvider } from "./context/TileContext"
 import { Grid } from "./components/Grid"
-import { useRef } from "react"
 import { Nav } from "./components/Nav"
 
 function App() {
@@ -12,8 +11,10 @@ function App() {
       <PathfindingProvider>
         <TileContextProvider>
           <SpeedContextProvider>
+          <div className="h-screen w-screen">
             <Nav />
             <Grid />
+          </div>
           </SpeedContextProvider>
         </TileContextProvider>
       </PathfindingProvider>

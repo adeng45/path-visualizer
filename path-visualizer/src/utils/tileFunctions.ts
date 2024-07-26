@@ -10,9 +10,6 @@ import {
   TILE_STYLE 
 } from "./constants";
 
-
-
-
 // Check to see if the coordinates point to start or end tile
 export const isStartOrEndTile = (row: number, col: number) => {
   return (row === 1 && col === 1) || (row === MAX_ROWS - 2 && col === MAX_COLS - 2)
@@ -21,6 +18,14 @@ export const isStartOrEndTile = (row: number, col: number) => {
 // Check to see if 2 tiles share the same coordinates
 export const isSameTile = (t1: Tile, t2: Tile) => {
   return (t1.row === t2.row) && (t1.col === t2.col);
+}
+
+export const flipIsWall = (
+  grid: Grid, 
+  row: number, 
+  col: number
+) => {
+  grid[row][col].isWall = !grid[row][col].isWall;
 }
 
 // Get the style of the tile given its identity
@@ -58,7 +63,7 @@ export const getTileStyle = ({
 
 // Change tile in grid. Assign 1 isX parameter to true only. 
 // Distance and parent can only be plugged if a change is wanted.
-export const setTileInGrid = ({
+const setTileStyleInGrid = ({
   grid,
   row,
   col,
@@ -67,8 +72,6 @@ export const setTileInGrid = ({
   isWall=false,
   isPath=false,
   isTraversed=false,
-  distance, 
-  parent
 }: {
   grid: Grid,
   row: number,
@@ -78,25 +81,16 @@ export const setTileInGrid = ({
   isWall?: boolean,
   isPath?: boolean,
   isTraversed?: boolean,
-  distance?: number,
-  parent?: Tile | null
 }) => {
   grid[row][col].isStart = isStart;
   grid[row][col].isEnd = isEnd;
   grid[row][col].isWall = isWall;
   grid[row][col].isPath = isPath;
   grid[row][col].isTraversed = isTraversed;
-  if (distance) {
-    grid[row][col].distance = distance;
-  }
-  if (parent) {
-    grid[row][col].parent = parent;
-  }
-
 }
 
 // Change tile style in DOM
-export const setTileInDOM = ({
+const setTileStyleInDOM = ({
   row,
   col,
   isStart=false,
@@ -152,7 +146,7 @@ export const setAndStyleTile = ({
   if (print) {
     console.log(row, col);
   }
-  setTileInGrid({
+  setTileStyleInGrid({
     grid,
     row,
     col, 
@@ -162,7 +156,7 @@ export const setAndStyleTile = ({
     isPath,
     isTraversed
   })
-  setTileInDOM({
+  setTileStyleInDOM({
     row, 
     col,
     isStart,

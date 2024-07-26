@@ -1,5 +1,5 @@
 import { Grid, Speed, Tile } from "./types";
-import { delayedExecute, sleep, delayAmount } from "./miscFunctions";
+import { delayedExecute } from "./miscFunctions";
 import { isStartOrEndTile, setAndStyleTile } from "./tileFunctions";
 import { MAX_COLS, MAX_ROWS } from "./constants";
 

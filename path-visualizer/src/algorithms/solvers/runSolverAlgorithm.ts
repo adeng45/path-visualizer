@@ -1,6 +1,5 @@
 import { Grid, Tile, Algorithm, Speed } from "../../utils/types";
 import { animatePath } from "../../utils/gridFunctions";
-import { sleep } from "../../utils/miscFunctions";
 import BFS from "./BFS";
 import DFS from "./DFS";
 import dijkstra from "./dijkstra";
@@ -40,11 +39,8 @@ const runSolverAlgorithm = async (algorithm: Algorithm, grid: Grid, startTile: T
     }
   }
 
-  animatePath(traversedTiles, path, startTile, endTile, speed);
+  await animatePath(grid, traversedTiles, path, startTile, endTile, speed);
 
-  // Wait for animations to conclude
-  // await sleep(8 * (traversedTiles.length + 8 * 2) + 30 * (path.length + 60) * speed);
-  await sleep((8 * traversedTiles.length * speed) + (30 * path.length * speed));
 }
 
 

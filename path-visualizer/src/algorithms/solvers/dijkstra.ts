@@ -19,7 +19,6 @@ const dijkstra = (
     if (currentTile) {
       // If the current tile is valid
       if (currentTile.isWall) continue; // Skip if the tile is a wall
-      if (currentTile.distance === Infinity) break; // Break if the tile's distance is infinity
       currentTile.isTraversed = true; // Mark the tile as traversed
       traversedTiles.push(currentTile); // Add the tile to the traversed tiles array
       if (isSameTile(currentTile, endTile)) break; // Break if the tile is the end tile

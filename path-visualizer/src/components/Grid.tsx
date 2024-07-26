@@ -2,9 +2,8 @@ import { twMerge } from "tailwind-merge";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { MAX_COLS, MAX_ROWS } from "../utils/constants";
 import { Tile } from "./Tile";
-import { MutableRefObject, useState, useRef } from "react"; 
-import { isStartOrEndTile } from "../utils/tileFunctions";
-import { setTileInGrid } from "../utils/tileFunctions";
+import { useRef } from "react"; 
+import { flipIsWall, isStartOrEndTile } from "../utils/tileFunctions";
 
 export const Grid = () => {
 
@@ -16,12 +15,7 @@ export const Grid = () => {
       return;
     }
     isMouseDownRef.current = true;
-    setTileInGrid({
-      grid, 
-      row, 
-      col, 
-      isWall: true
-    })
+    flipIsWall(grid, row, col);
     setGrid(grid.slice());
   }
 
@@ -29,12 +23,7 @@ export const Grid = () => {
     if (isStartOrEndTile(row, col) || !isMouseDownRef.current) {
       return;
     }
-    setTileInGrid({
-      grid, 
-      row, 
-      col, 
-      isWall: true
-    })
+    flipIsWall(grid, row, col);
     setGrid(grid.slice());
   }
 
@@ -62,7 +51,7 @@ export const Grid = () => {
     >
       {grid.map((r, rowIndex) => (
         <div key={rowIndex} className="flex">
-          {r.map((tile, tileIndex) => {
+          {r.map((tile, _) => {
             const { row, col, isEnd, isStart, isPath, isTraversed, isWall } =
               tile;
             return (

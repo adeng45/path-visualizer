@@ -1,7 +1,7 @@
 import { Grid, Speed, Tile } from "./types";
 import { MAX_ROWS, MAX_COLS, DELAY_CONSTANT, LONG_DELAY_CONSTANT } from "./constants";
-import { isStartOrEndTile, setTileInGrid, setTileInDOM, isSameTile, setAndStyleTile } from "./tileFunctions";
-import { delayedExecute } from "./miscFunctions";
+import { isStartOrEndTile, isSameTile, setAndStyleTile } from "./tileFunctions";
+import { delayedExecute, sleep } from "./miscFunctions";
 
 // Helper for grid (javascript object) initialization
 const initRow = (row: number, startTile: Tile, endTile: Tile) => {
@@ -32,14 +32,25 @@ export const initGrid = (startTile: Tile, endTile: Tile) => {
 }
 
 // Refreshes the grid to contain no walls
-export const resetGrid = (
+export const resetGrid = ({
+  grid, 
+  startTile,
+  endTile,
+  keepWalls=false
+}: {
   grid: Grid,
   startTile: Tile,
   endTile: Tile,
-) => {
+  keepWalls?: boolean
+}) => {
   for (let row = 0; row < MAX_ROWS; row++) {
     for (let col = 0; col < MAX_COLS; col++) {
-      if (isSameTile(grid[row][col], startTile)) {
+      grid[row][col].distance = Infinity;
+      grid[row][col].parent = null;
+      if (grid[row][col].isWall && keepWalls) {
+        continue;
+      }
+      else if (isSameTile(grid[row][col], startTile)) {
         setAndStyleTile({
           grid,
           row, 
@@ -67,7 +78,8 @@ export const resetGrid = (
 };
 
 
-export const animatePath = (
+export const animatePath = async (
+  grid: Grid,
   traversedTiles: Tile[],
   path: Tile[],
   startTile: Tile,
@@ -79,7 +91,8 @@ export const animatePath = (
     if (!isStartOrEndTile(tile.row, tile.col)) {
       delayedExecute({
         f: () => {
-          setTileInDOM({
+          setAndStyleTile({
+            grid,
             row: tile.row,
             col: tile.col,
             isTraversed: true,
@@ -98,7 +111,8 @@ export const animatePath = (
         if (!isStartOrEndTile(tile.row, tile.col)) {
           delayedExecute({
             f: () => {
-              setTileInDOM({
+              setAndStyleTile({
+                grid, 
                 row: tile.row, 
                 col: tile.col,
                 isPath: true,
@@ -112,6 +126,8 @@ export const animatePath = (
     },
     fixedAmount: DELAY_CONSTANT * traversedTiles.length * speed
   });
+
+  await sleep((DELAY_CONSTANT * traversedTiles.length * speed) + (LONG_DELAY_CONSTANT * path.length * speed));
 
 }
 

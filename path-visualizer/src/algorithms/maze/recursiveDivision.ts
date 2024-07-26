@@ -1,5 +1,5 @@
 import { Grid, Tile, Speed } from "../../utils/types"
-import { delayAmount, delayedExecute, getRandomInt, sleep } from "../../utils/miscFunctions";
+import { delayedExecute, getRandomInt, sleep } from "../../utils/miscFunctions";
 import { isStartOrEndTile, setAndStyleTile } from "../../utils/tileFunctions";
 import { MAX_COLS, MAX_ROWS } from "../../utils/constants";
 import { constructBorder } from "../../utils/wallFunctions";

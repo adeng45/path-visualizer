@@ -4,9 +4,14 @@ import binaryTree from "./binaryTree";
 import recursiveDivision from "./recursiveDivision";
 
 const runMazeAlgorithm = async (maze: Maze, grid: Grid, startTile: Tile, endTile: Tile, speed: Speed) => {
+
   switch (maze) {
     case "NONE": {
-      resetGrid(grid, startTile, endTile);
+      resetGrid({
+        grid, 
+        startTile, 
+        endTile
+      });
       break;
     }
     case "BINARY_TREE": {
