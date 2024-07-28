@@ -2,36 +2,41 @@ import { twMerge } from "tailwind-merge";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { MAX_COLS, MAX_ROWS } from "../utils/constants";
 import { Tile } from "./Tile";
-import { useRef } from "react"; 
+import { useState, MutableRefObject, useEffect } from "react"; 
 import { flipIsWall, isStartOrEndTile } from "../utils/tileFunctions";
+import { useIsMouseDown } from "../hooks/useIsMouseDown";
 
-export const Grid = () => {
+export const Grid = ({
+  isVisualizationRunningRef
+} : {
+  isVisualizationRunningRef: MutableRefObject<boolean>
+}) => {
 
   const { grid, setGrid } = usePathfinding();
-  const isMouseDownRef = useRef<boolean>(false);
+  const [isMouseDown, setIsMouseDown] = useIsMouseDown();
 
   const handleMouseDown = (row: number, col: number) => {
-    if (isStartOrEndTile(row, col)) {
+    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col)) {
       return;
     }
-    isMouseDownRef.current = true;
+    setIsMouseDown(true);
     flipIsWall(grid, row, col);
     setGrid(grid.slice());
   }
 
   const handleMouseEnter = (row: number, col: number) => {
-    if (isStartOrEndTile(row, col) || !isMouseDownRef.current) {
+    if (isVisualizationRunningRef.current || isStartOrEndTile(row, col) || !isMouseDown) {
       return;
     }
     flipIsWall(grid, row, col);
     setGrid(grid.slice());
   }
 
-  const handleMouseUp = (row: number, col: number) => {
-    if (isStartOrEndTile(row, col)) {
+  const handleMouseUp = () => {
+    if (isVisualizationRunningRef.current) {
       return;
     }
-    isMouseDownRef.current = false;
+    setIsMouseDown(false);
   }
 
   return (
@@ -66,7 +71,7 @@ export const Grid = () => {
                 isWall={isWall}
                 handleMouseDown={() => handleMouseDown(row, col)}
                 handleMouseEnter={() => handleMouseEnter(row, col)}
-                handleMouseUp={() => handleMouseUp(row, col)}
+                handleMouseUp={() => handleMouseUp()}
               />
             );
           })}

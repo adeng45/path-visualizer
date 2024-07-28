@@ -40,15 +40,15 @@ export const Tile = ({
     animate: true
   })
 
-  // const borderStyle =
-  //   row === MAX_ROWS - 1 ? "border-b" : col === 0 ? "border-l" : "";
-  // const edgeStyle = row === MAX_ROWS - 1 && col === 0 ? "border-l" : "";
-
   return (
     <div
       className={twMerge(tileStyle)}
       id={`${row}-${col}`}
-      onMouseDown={() => handleMouseDown()}
+      onMouseDown={(e) => {
+        // To prevent drag-event from firing
+        e.preventDefault();
+        handleMouseDown();
+      }}
       onMouseEnter={() => handleMouseEnter()}
       onMouseUp={() => handleMouseUp()}
     />

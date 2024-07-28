@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MutableRefObject, useState } from "react";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { useSpeed } from "../hooks/useSpeed";
 import { Select } from "./Select";
@@ -10,7 +10,11 @@ import { PlayButton } from "./PlayButton";
 import runSolverAlgorithm from "../algorithms/solvers/runSolverAlgorithm";
 import runMazeAlgorithm from "../algorithms/maze/runMazeAlgorithm";
 
-export const Nav = () => {
+export const Nav = ({
+  isVisualizationRunningRef
+} : {
+  isVisualizationRunningRef: MutableRefObject<boolean>
+}) => {
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isGraphVisualized, setIsGraphVisualized] = useState<boolean>(false);
@@ -31,12 +35,14 @@ export const Nav = () => {
 
     setAlgorithm(algorithm);
     setIsDisabled(true);
+    isVisualizationRunningRef.current = true;
 
     await runSolverAlgorithm(algorithm, grid, startTile, endTile, speed);
 
     setGrid(grid.slice());
     setIsDisabled(false);
     setIsGraphVisualized(true);
+    isVisualizationRunningRef.current = false;
 
   }
 
@@ -50,12 +56,14 @@ export const Nav = () => {
 
     setMaze(maze)
     setIsDisabled(true);
+    isVisualizationRunningRef.current = true;
 
     await runMazeAlgorithm(maze, grid, startTile, endTile, speed);
 
     setGrid(grid.slice());
     setIsDisabled(false);
     setIsGraphVisualized(false);
+    isVisualizationRunningRef.current = false;
 
   }
 

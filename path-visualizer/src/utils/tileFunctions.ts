@@ -25,7 +25,12 @@ export const flipIsWall = (
   row: number, 
   col: number
 ) => {
-  grid[row][col].isWall = !grid[row][col].isWall;
+  setAndStyleTile({
+    grid, 
+    row, 
+    col,
+    isWall: !grid[row][col].isWall
+  })
 }
 
 // Get the style of the tile given its identity
