@@ -1,4 +1,3 @@
-import { twMerge } from "tailwind-merge";
 import {
   getTileStyle
 } from "../utils/tileFunctions"
@@ -42,7 +41,7 @@ export const Tile = ({
 
   return (
     <div
-      className={twMerge(tileStyle)}
+      className={tileStyle}
       id={`${row}-${col}`}
       onMouseDown={(e) => {
         // To prevent drag-event from firing

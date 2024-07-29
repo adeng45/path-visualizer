@@ -30,7 +30,7 @@ export const END_TILE_CONFIGURATION = {
 }
 
 export const TILE_STYLE =
-  "lg:w-[17px] md:w-[15px] xs:w-[8px] w-[7px] lg:h-[17px] md:h-[15px] xs:h-[8px] h-[7px] border border-sky-200";
+  "lg:w-[17px] md:w-[15px] w-[7px] lg:h-[17px] md:h-[15px] h-[7px] border border-sky-200";
 export const TRAVERSED_TILE_STYLE = TILE_STYLE + " bg-cyan-500";
 export const START_TILE_STYLE = TILE_STYLE + " bg-green-500";
 export const END_TILE_STYLE = TILE_STYLE + " bg-red-600";

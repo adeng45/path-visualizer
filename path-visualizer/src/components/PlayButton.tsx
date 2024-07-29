@@ -15,7 +15,7 @@ export function PlayButton({
     <button
       disabled={isDisabled}
       onClick={handleRunAlgorithm}
-      className="disabled:pointer-events-none disabled:opacity-50 transition ease-in rounded-full p-2.5 shadow-md bg-green-500 hover:bg-green-600 border-none active:ring-green-300 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-30"
+      className="border-none text-white disabled:pointer-events-none disabled:opacity-50 rounded-full transition ease-in p-2.5 bg-green-500 hover:bg-green-600 hover:ring-2 hover:ring-slate-100"
     >
       {isGraphVisualized ? (
         <GrPowerReset className="w-5 h-5" />
