@@ -1,15 +1,23 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Visualizer for path algorithms executed on 2 points in a graph
 <br>
 
 =======
 ## Visualizer for path algorithms executed on 2 points in a graph. 
 <br>
+=======
+## Visualizer for path algorithms executed on 2 points in a graph.
+>>>>>>> 70cf7e50252ca802bf0fdb380ac4d87b834f23ca
 
-## Made with React, TypeScript and Vite
+Built with the Next.js App Router, TypeScript & Tailwind
 
+<<<<<<< HEAD
 >>>>>>> 13303d85984f8fad71a1a5af73d589e5e71d2bff
 [DEMO]()
+=======
+[https://path-visualizer-ad45.vercel.app](https://path-visualizer-ad45.vercel.app/)
+>>>>>>> 70cf7e50252ca802bf0fdb380ac4d87b834f23ca
 <br>
 <br>
 
