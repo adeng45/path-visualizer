@@ -1,8 +1,6 @@
 ## Visualizer for path algorithms executed on 2 points in a graph. 
 <br>
 
-## Made with React, TypeScript and Vite
-
 [DEMO]()
 <br>
 <br>
