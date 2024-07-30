@@ -1,8 +1,9 @@
-## Visualizer for path algorithms executed on 2 points in a graph. 
+## Visualizer for path algorithms executed on 2 points in a graph.
 
 Built with the Next.js App Router, TypeScript & Tailwind
 
-[DEMO]()
+[https://path-visualizer-ad45.vercel.app](https://path-visualizer-ad45.vercel.app/)
+<br>
 <br>
 
 ## To do
