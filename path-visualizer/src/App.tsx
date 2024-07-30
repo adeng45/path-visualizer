@@ -14,7 +14,7 @@ function App() {
       <PathfindingProvider>
         <TileContextProvider>
           <SpeedContextProvider>
-          <div className="h-screen w-screen bg-[#131416]">
+          <div className="h-screen w-screen overflow-auto bg-[#131416]">
             <Nav isVisualizationRunningRef={isVisualizationRunningRef} />
             <Grid isVisualizationRunningRef={isVisualizationRunningRef}  />
           </div>
