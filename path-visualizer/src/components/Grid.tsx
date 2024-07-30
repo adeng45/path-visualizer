@@ -1,5 +1,5 @@
 import { usePathfinding } from "../hooks/usePathfinding";
-import { MAX_COLS, MAX_ROWS } from "../utils/constants";
+import { MAX_COLS } from "../utils/constants";
 import { Tile } from "./Tile";
 import { MutableRefObject } from "react"; 
 import { flipIsWall, isStartOrEndTile } from "../utils/tileFunctions";

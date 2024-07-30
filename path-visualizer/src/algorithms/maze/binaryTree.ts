@@ -1,12 +1,10 @@
 import { MAX_COLS, MAX_ROWS } from "../../utils/constants";
 import { createInitialWalls, destroyWall } from "../../utils/wallFunctions";
 import { sleep, coinflip, delayAmount } from "../../utils/miscFunctions";
-import { Grid, Speed, Tile } from "../../utils/types";
+import { Grid, Speed } from "../../utils/types";
 
 const binaryTree = async (
   grid: Grid,
-  startTile: Tile,
-  endTile: Tile,
   speed: Speed
 ) => {
   createInitialWalls(grid, speed); // Make initial wall setup

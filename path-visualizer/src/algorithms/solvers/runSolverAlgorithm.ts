@@ -39,7 +39,7 @@ const runSolverAlgorithm = async (algorithm: Algorithm, grid: Grid, startTile: T
     }
   }
 
-  await animatePath(grid, traversedTiles, path, startTile, endTile, speed);
+  await animatePath(grid, traversedTiles, path, speed);
 
 }
 

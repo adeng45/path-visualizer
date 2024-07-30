@@ -23,10 +23,7 @@ const recursiveDivision = async (
   });
   constructBorder(
     grid, 
-    startTile,
-    endTile,
     timeToConstructBorder,
-    speed
   )
   await sleep(timeToConstructBorder);
 }

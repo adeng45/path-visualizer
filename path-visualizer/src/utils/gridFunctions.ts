@@ -82,8 +82,6 @@ export const animatePath = async (
   grid: Grid,
   traversedTiles: Tile[],
   path: Tile[],
-  startTile: Tile,
-  endTile: Tile,
   speed: Speed
 ) => {
   for (let i = 0; i < traversedTiles.length; i++) {

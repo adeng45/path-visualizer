@@ -1,4 +1,4 @@
-import { Grid, Speed, Tile } from "./types";
+import { Grid, Speed } from "./types";
 import { delayedExecute } from "./miscFunctions";
 import { isStartOrEndTile, setAndStyleTile } from "./tileFunctions";
 import { MAX_COLS, MAX_ROWS } from "./constants";
@@ -80,10 +80,7 @@ export const destroyWall = (
 
 export const constructBorder = (
   grid: Grid,
-  startTile: Tile,
-  endTile: Tile,
   timeAllowed: number,
-  speed: number
 ) => {
   const shape = [
     { row: 0, col: 1 },

@@ -15,7 +15,7 @@ const runMazeAlgorithm = async (maze: Maze, grid: Grid, startTile: Tile, endTile
       break;
     }
     case "BINARY_TREE": {
-      await binaryTree(grid, startTile, endTile, speed);
+      await binaryTree(grid, speed);
       break;
     }
     case "RECURSIVE_DIVISION": {
