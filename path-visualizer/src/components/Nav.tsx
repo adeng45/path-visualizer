@@ -18,7 +18,7 @@ export const Nav = ({
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isGraphVisualized, setIsGraphVisualized] = useState<boolean>(false);
-  const { grid, setGrid, maze, setMaze, algorithm, setAlgorithm } = usePathfinding();
+  const { grid, setGrid, setMaze, algorithm, setAlgorithm } = usePathfinding();
   const { speed, setSpeed } = useSpeed();
   const { startTile, endTile } = useTile();
 
