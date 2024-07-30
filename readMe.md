@@ -1,8 +1,8 @@
 ## Visualizer for path algorithms executed on 2 points in a graph. 
-<br>
+
+Built with the Next.js App Router, TypeScript & Tailwind
 
 [DEMO]()
-<br>
 <br>
 
 ## To do
